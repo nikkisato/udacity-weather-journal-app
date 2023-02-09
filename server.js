@@ -26,11 +26,12 @@ app.get("/all", (req, res) => {
 
 // post route that adds incoming data to ProjectData
 app.post("/all", (req, res) => {
-  console.log(req.body);
+  console.log(req);
   newData = {
     date: req.body.date,
     temperature: req.body.temperature,
   };
+  console.log(newData);
   projectData = newData;
 });
 

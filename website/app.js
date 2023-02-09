@@ -4,7 +4,7 @@
 let d = new Date();
 let newDate = d.getMonth() + "." + d.getDate() + "." + d.getFullYear();
 
-async function postData(data) {
+async function postData(url = "", data) {
   console.log("within postData", data);
   const response = await fetch("http://localhost:8080/all", {
     method: "POST",
@@ -29,8 +29,6 @@ function performAction(event) {
   const apiKey = `&appid=6034d7fbfff006ec80460cafa6fe2107`;
   const fullUrl = `${baseURL}${zipCode}${apiKey}`;
 
-  console.log("fullUrl", fullUrl);
-
   getOpenWeather(fullUrl)
     .then(function (data) {
       console.log("(getWeatherData.then) Processing...", data);
@@ -44,14 +42,10 @@ const getOpenWeather = async (url) => {
 
   try {
     const data = await response.json();
-    console.log("(getWeatherData) Receiving data=", data);
-    postData("/add", {
-      date: data.date,
-      temperature: data.temperature,
-    });
+    postData("http://localhost:8080/all", data);
     return data;
   } catch (error) {
-    console.log("error", error);
+    console.error("error", error);
   }
 };
 
