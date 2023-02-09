@@ -25,14 +25,13 @@ app.get("/all", (req, res) => {
 });
 
 // post route that adds incoming data to ProjectData
-app.post("/all", (req, res) => {
-  console.log(req);
-  newData = {
-    date: req.body.date,
-    temperature: req.body.temperature,
-  };
-  console.log(newData);
-  projectData = newData;
+app.post("/addData", (req, res) => {
+  let data = req.body;
+  projectData["temperature"] = data.temperature;
+  projectData["date"] = data.date;
+  projectData["feelings"] = data.feelings;
+  console.log(projectData);
+  res.send(projectData);
 });
 
 // Setup Server

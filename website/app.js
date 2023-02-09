@@ -4,9 +4,8 @@
 let d = new Date();
 let newDate = d.getMonth() + "." + d.getDate() + "." + d.getFullYear();
 
-async function postData(url = "", data) {
-  console.log("within postData", data);
-  const response = await fetch("http://localhost:8080/all", {
+const postData = async (url = "", data = {}) => {
+  const response = await fetch(url, {
     method: "POST",
     credentials: "same-origin",
     headers: {
@@ -14,24 +13,31 @@ async function postData(url = "", data) {
     },
     body: JSON.stringify(data),
   });
+
   try {
-    console.log("within try postData", response);
-    return await response.json();
-  } catch (e) {
-    console.log("error", e);
+    const newData = await response.json();
+    return newData;
+  } catch (error) {
+    console.log("error", error);
   }
-}
+};
 
 function performAction(event) {
   event.preventDefault();
   const baseURL = "https://api.openweathermap.org/data/2.5/weather?q=";
   const zipCode = document.getElementById("zip").value;
+  const feelings = document.getElementById("feelings").value;
   const apiKey = `&appid=6034d7fbfff006ec80460cafa6fe2107`;
   const fullUrl = `${baseURL}${zipCode}${apiKey}`;
 
-  getOpenWeather(fullUrl)
+  getOpenWeather(fullUrl, (data = {}))
     .then(function (data) {
-      console.log("(getWeatherData.then) Processing...", data);
+      console.log(data);
+      postData("http://localhost:8080/addData", {
+        temperature: data.main.temp,
+        date: newDate,
+        feelings: feelings,
+      });
     })
     .catch((error) => alert("Please enter a correct zip code."));
 }
@@ -42,7 +48,7 @@ const getOpenWeather = async (url) => {
 
   try {
     const data = await response.json();
-    postData("http://localhost:8080/all", data);
+    console.log("(getWeatherData.then) Processing...", data);
     return data;
   } catch (error) {
     console.error("error", error);
