@@ -15,6 +15,7 @@ app.use(bodyParser.json());
 // Cors for cross origin allowance
 const cors = require("cors");
 app.use(cors());
+
 // Initialize the main project folder
 app.use(express.static("website"));
 
@@ -30,7 +31,6 @@ app.post("/addData", (req, res) => {
   projectData["temperature"] = data.temperature;
   projectData["date"] = data.date;
   projectData["feelings"] = data.feelings;
-  console.log(projectData);
   res.send(projectData);
 });
 
